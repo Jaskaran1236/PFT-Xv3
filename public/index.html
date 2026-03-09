@@ -6,10 +6,9 @@
   <title>PFT-X | Personal Financial Terminal</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg:          #07090F;
       --bg-card:     #0C1018;
@@ -25,292 +24,88 @@
       --red:         #CF5C5C;
       --border:      rgba(255,255,255,0.06);
     }
-
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text-1);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* ── SCROLLBAR ── */
+    body { background: var(--bg); color: var(--text-1); font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 3px; }
 
-    /* ── TICKER BAR ── */
-    .ticker-wrap {
-      background: #090C14;
-      border-bottom: 1px solid var(--gold-border);
-      height: 34px;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-    }
-    .ticker-badge {
-      background: var(--gold);
-      color: #000;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      padding: 0 14px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-    }
-    .ticker-scroll {
-      flex: 1;
-      overflow: hidden;
-      mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
-    }
-    .ticker-track {
-      display: inline-block;
-      white-space: nowrap;
-      animation: tickerScroll 55s linear infinite;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px;
-      padding: 0 24px;
-    }
+    /* TICKER */
+    .ticker-wrap { background: #090C14; border-bottom: 1px solid var(--gold-border); height: 34px; display: flex; align-items: center; overflow: hidden; }
+    .ticker-badge { background: var(--gold); color: #000; font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; padding: 0 14px; height: 100%; display: flex; align-items: center; flex-shrink: 0; }
+    .ticker-scroll { flex: 1; overflow: hidden; mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%); }
+    .ticker-track { display: inline-block; white-space: nowrap; animation: tickerScroll 55s linear infinite; font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 0 24px; }
     @keyframes tickerScroll { 0%{ transform:translateX(0) } 100%{ transform:translateX(-50%) } }
 
-    /* ── HEADER ── */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 32px;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: rgba(7,9,15,0.94);
-      backdrop-filter: blur(14px);
-      z-index: 100;
-    }
+    /* HEADER */
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 18px 32px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(7,9,15,0.94); backdrop-filter: blur(14px); z-index: 100; }
     .logo { display: flex; align-items: baseline; gap: 12px; }
-    .logo-mark {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 24px;
-      font-weight: 600;
-      color: var(--gold);
-      letter-spacing: 0.06em;
-    }
+    .logo-mark { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--gold); letter-spacing: 0.06em; }
     .logo-sub { font-size: 10px; color: var(--text-3); letter-spacing: 0.18em; text-transform: uppercase; }
-    .header-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px;
-      color: var(--text-3);
-    }
-    .live-dot {
-      width: 7px; height: 7px;
-      background: var(--green);
-      border-radius: 50%;
-      animation: blink 2s ease-in-out infinite;
-    }
+    .header-meta { display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-3); }
+    .live-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: blink 2s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
 
-    /* ── NAV TABS ── */
-    .nav-tabs {
-      display: flex;
-      gap: 8px;
-      padding: 14px 32px 0;
-      border-bottom: 1px solid var(--border);
-      background: rgba(7,9,15,0.7);
-    }
-    .tab {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-3);
-      border-radius: 8px 8px 0 0;
-      padding: 8px 18px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: all .2s;
-      font-family: 'DM Sans', sans-serif;
-      position: relative;
-      bottom: -1px;
-      border-bottom-color: transparent;
-    }
-    .tab:hover { color: var(--text-2); border-color: var(--border); }
-    .tab.active {
-      background: var(--bg-card);
-      border-color: var(--gold-border);
-      border-bottom-color: var(--bg-card);
-      color: var(--gold);
-    }
-
-    /* ── MAIN ── */
+    /* LAYOUT */
     .main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
-
-    /* ── SECTION HEADING ── */
-    .s-head {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--text-1);
-      letter-spacing: 0.03em;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-    .s-head::before {
-      content: '';
-      display: block;
-      width: 3px;
-      height: 16px;
-      background: var(--gold);
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
+    .s-head { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: var(--text-1); letter-spacing: 0.03em; display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .s-head::before { content: ''; display: block; width: 3px; height: 16px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
     .s-head-note { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--text-3); font-weight: 400; margin-left: 4px; }
-
-    /* ── CARDS ── */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      transition: border-color 0.25s;
-    }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: border-color 0.25s; }
     .card:hover { border-color: var(--gold-border); }
-    .g3  { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
-    .g2  { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; margin-bottom: 20px; }
+    .g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+    .g2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; margin-bottom: 20px; }
     .g2r { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 20px; }
-    .mb  { margin-bottom: 20px; }
+    .mb { margin-bottom: 20px; }
 
-    /* ── STAT CARDS ── */
+    /* STATS */
     .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 10px; }
     .stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 500; line-height: 1; }
-    .stat-val.pos  { color: var(--green); }
-    .stat-val.neg  { color: var(--red); }
-    .stat-val.gold { color: var(--gold); }
+    .stat-val.pos { color: var(--green); } .stat-val.neg { color: var(--red); } .stat-val.gold { color: var(--gold); }
 
-    /* ── FORMS ── */
+    /* FORMS */
     .form-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
     .fg { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 100px; }
     .f-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
-    .f-input {
-      background: #090C14;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 13px;
-      color: var(--text-1);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 13px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      width: 100%;
-    }
+    .f-input { background: #090C14; border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; color: var(--text-1); font-family: 'IBM Plex Mono', monospace; font-size: 13px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%; }
     .f-input:focus { border-color: var(--gold-border); box-shadow: 0 0 0 3px rgba(201,168,76,0.06); }
     .f-input::placeholder { color: var(--text-3); }
     .f-input.err { border-color: rgba(207,92,92,0.5); }
     select.f-input { cursor: pointer; }
-
-    .btn {
-      background: transparent;
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 10px 24px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-    .btn:hover  { background: var(--gold); color: #000; }
+    .btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 24px; border-radius: 8px; cursor: pointer; transition: all 0.2s; flex-shrink: 0; white-space: nowrap; }
+    .btn:hover { background: var(--gold); color: #000; }
     .btn:active { transform: scale(0.98); }
     .btn-sm { padding: 7px 16px; font-size: 11px; }
 
-    /* ── TABLES ── */
-    .ptable, .htable, .wtable { width: 100%; border-collapse: collapse; }
-    .ptable th, .htable th, .wtable th {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-3);
-      text-align: left;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border);
-      font-weight: 500;
-    }
-    .ptable td, .htable td, .wtable td {
-      padding: 11px 12px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px;
-      color: var(--text-2);
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-    }
-    .ptable td:first-child, .htable td:first-child, .wtable td:first-child { color: var(--text-1); font-weight: 500; }
-    .ptable tr:last-child td, .htable tr:last-child td, .wtable tr:last-child td { border-bottom: none; }
-    .ptable tbody tr:hover td, .htable tbody tr:hover td, .wtable tbody tr:hover td { background: rgba(255,255,255,0.015); }
+    /* TABLES */
+    .ptable,.htable,.wtable { width: 100%; border-collapse: collapse; }
+    .ptable th,.htable th,.wtable th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); font-weight: 500; }
+    .ptable td,.htable td,.wtable td { padding: 11px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-2); border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .ptable td:first-child,.htable td:first-child,.wtable td:first-child { color: var(--text-1); font-weight: 500; }
+    .ptable tr:last-child td,.htable tr:last-child td,.wtable tr:last-child td { border-bottom: none; }
+    .ptable tbody tr:hover td,.htable tbody tr:hover td,.wtable tbody tr:hover td { background: rgba(255,255,255,0.015); }
     .htable td:nth-child(3) { color: var(--gold); }
-
-    .pos { color: var(--green) !important; }
-    .neg { color: var(--red)   !important; }
-    .action-buy  { color: var(--green)  !important; font-weight: 500; }
-    .action-sell { color: var(--red)    !important; font-weight: 500; }
-    .action-hold { color: var(--text-3) !important; font-weight: 500; }
-
-    .ticker-link {
-      cursor: pointer;
-      color: var(--gold) !important;
-      text-decoration: none;
-      border-bottom: 1px dashed var(--gold-border);
-      transition: color 0.15s, border-color 0.15s;
-      font-family: 'IBM Plex Mono', monospace;
-    }
-    .ticker-link:hover { opacity: 0.8; }
-
-    .rmv-btn {
-      background: none;
-      border: none;
-      color: var(--text-3);
-      cursor: pointer;
-      font-size: 13px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      transition: color 0.2s, background 0.2s;
-    }
+    .pos { color: var(--green) !important; } .neg { color: var(--red) !important; }
+    .action-buy { color: var(--green) !important; font-weight:500; } .action-sell { color: var(--red) !important; font-weight:500; } .action-hold { color: var(--text-3) !important; font-weight:500; }
+    .ticker-link { cursor: pointer; color: var(--text-1) !important; text-decoration: none; border-bottom: 1px dashed var(--gold-border); transition: color 0.15s, border-color 0.15s; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+    .ticker-link:hover { color: var(--gold) !important; border-color: var(--gold); }
+    .rmv-btn { background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 13px; padding: 2px 6px; border-radius: 4px; transition: color 0.2s, background 0.2s; }
     .rmv-btn:hover { color: var(--red); background: rgba(207,92,92,0.1); }
 
-    /* ── EMPTY STATE ── */
+    /* EMPTY */
     .empty { text-align: center; padding: 28px 16px; color: var(--text-3); font-size: 13px; }
     .empty-icon { font-size: 20px; margin-bottom: 6px; opacity: 0.4; }
 
-    /* ── HEATMAP ── */
-    .heatmap-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
-    .h-cell {
-      border-radius: 8px;
-      padding: 12px 8px;
-      text-align: center;
-      font-family: 'IBM Plex Mono', monospace;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: transform 0.15s, filter 0.15s;
-    }
+    /* HEATMAP */
+    .heatmap-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; }
+    .h-cell { border-radius: 8px; padding: 12px 8px; text-align: center; font-family: 'IBM Plex Mono', monospace; border: 1px solid transparent; cursor: pointer; transition: transform 0.15s, filter 0.15s; }
     .h-cell:hover { transform: scale(1.05); filter: brightness(1.2); }
-    .h-cell .hn { font-size: 11px; color: rgba(255,255,255,0.85); display: block; margin-bottom: 3px; }
+    .h-cell .hn { font-size: 11px; color: rgba(255,255,255,0.85); display: block; }
     .h-cell .hp { font-size: 11px; }
     .h-pos { background: rgba(76,175,126,0.12); border-color: rgba(76,175,126,0.18); color: var(--green); }
-    .h-neg { background: rgba(207,92,92,0.12);  border-color: rgba(207,92,92,0.18);  color: var(--red); }
+    .h-neg { background: rgba(207,92,92,0.12); border-color: rgba(207,92,92,0.18); color: var(--red); }
 
-    /* ── NEWS ── */
+    /* NEWS */
     .news-list { display: flex; flex-direction: column; gap: 14px; }
     .news-item { padding-bottom: 14px; border-bottom: 1px solid var(--border); }
     .news-item:last-child { border-bottom: none; padding-bottom: 0; }
@@ -320,177 +115,70 @@
     .news-title a:hover { color: var(--gold-light); }
     .news-date { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); }
 
-    /* ── PRICE ALERTS ── */
-    .alert-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #090C14;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 6px 12px 6px 14px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px;
-      margin: 4px;
-      transition: all .2s;
-    }
-    .alert-pill .ap-ticker { color: var(--gold); }
-    .alert-pill .ap-dir   { color: var(--text-3); font-size: 10px; }
+    /* ALERTS */
+    .alert-pill { display: inline-flex; align-items: center; gap: 8px; background: #090C14; border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px 6px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin: 4px; }
+    .alert-pill .ap-ticker { color: var(--gold); margin-right: 2px; }
+    .alert-pill .ap-dir { color: var(--text-3); font-size: 10px; }
     .alert-pill .ap-price { color: var(--text-1); }
-    .alert-pill .ap-hit   { color: var(--gold); font-size: 10px; }
     .alert-pill button { background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 12px; padding: 0 2px; transition: color 0.15s; }
     .alert-pill button:hover { color: var(--red); }
     .alert-pill.triggered { border-color: var(--gold-border); background: var(--gold-dim); }
     .alerts-wrap { display: flex; flex-wrap: wrap; margin-top: 14px; min-height: 20px; }
 
-    /* ── MODAL ── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.72);
-      z-index: 500;
-      display: flex;
-      align-items: stretch;
-      justify-content: flex-end;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-      backdrop-filter: blur(4px);
-    }
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 500; display: flex; align-items: stretch; justify-content: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(4px); }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
-    .modal-panel {
-      width: min(660px, 100vw);
-      background: var(--bg-modal);
-      border-left: 1px solid var(--gold-border);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      transform: translateX(30px);
-      transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
-    }
+    .modal-panel { width: min(660px, 100vw); background: var(--bg-modal); border-left: 1px solid var(--gold-border); display: flex; flex-direction: column; overflow-y: auto; transform: translateX(30px); transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); }
     .modal-overlay.open .modal-panel { transform: translateX(0); }
-    .modal-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 24px 28px 20px;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: var(--bg-modal);
-      z-index: 10;
-    }
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 24px 28px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-modal); z-index: 10; }
     .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--gold); letter-spacing: 0.04em; }
     .modal-subtitle { font-size: 12px; color: var(--text-3); margin-top: 3px; }
-    .modal-close {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text-2);
-      width: 32px; height: 32px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
+    .modal-close { background: none; border: 1px solid var(--border); color: var(--text-2); width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
     .modal-close:hover { border-color: var(--gold-border); color: var(--gold); }
     .modal-body { padding: 24px 28px; flex: 1; }
+    .chart-loading { display: flex; align-items: center; justify-content: center; height: 260px; color: var(--text-3); font-size: 13px; gap: 10px; }
+    .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .chart-wrap { position: relative; margin-bottom: 20px; }
+    #stockChart { max-height: 260px; }
+    .explain-box { background: #0A0D18; border: 1px solid var(--gold-border); border-radius: 10px; padding: 16px 18px; margin-top: 16px; display: none; }
+    .explain-box.visible { display: block; animation: fadeIn 0.25s ease; }
+    .explain-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .explain-date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-3); margin-bottom: 8px; }
+    .explain-text { font-size: 13px; color: var(--text-2); line-height: 1.75; }
+    .explain-loader { display: flex; align-items: center; gap: 8px; color: var(--text-3); font-size: 12px; }
+    .chart-hint { font-size: 11px; color: var(--text-3); text-align: center; margin-bottom: 14px; }
+    .chart-hint span { color: var(--gold); }
     .modal-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
     .modal-stat { background: #090C14; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
     .modal-stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 6px; }
     .modal-stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 16px; color: var(--text-1); }
-
-    .chart-loading { display: flex; align-items: center; justify-content: center; height: 260px; color: var(--text-3); font-size: 13px; gap: 10px; }
-    .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    #stockChart { max-height: 260px; }
-
-    .chart-hint { font-size: 11px; color: var(--text-3); text-align: center; margin-bottom: 14px; }
-    .chart-hint span.peak   { color: var(--gold); }
-    .chart-hint span.trough { color: var(--red); }
-
-    .explain-box {
-      background: #0A0D18;
-      border: 1px solid var(--gold-border);
-      border-radius: 10px;
-      padding: 16px 18px;
-      margin-top: 16px;
-      display: none;
-    }
-    .explain-box.visible { display: block; animation: fadeIn .25s ease; }
-    .explain-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
-    .explain-date  { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-3); margin-bottom: 8px; }
-    .explain-text  { font-size: 13px; color: var(--text-2); line-height: 1.75; }
-    .explain-loader { display: flex; align-items: center; gap: 8px; color: var(--text-3); font-size: 12px; }
-
     .modal-news-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
     .modal-news-item:last-child { border-bottom: none; }
 
-    /* ── MISC ── */
     canvas { max-height: 230px; }
     .fade { animation: fadeIn 0.35s ease forwards; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
-    /* ── NOTIFICATION BANNER ── */
-    .alert-banner {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--bg-card);
-      border: 1px solid var(--gold-border);
-      border-radius: 10px;
-      padding: 14px 18px;
-      max-width: 320px;
-      z-index: 9999;
-      font-size: 13px;
-      color: var(--text-1);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-      animation: fadeIn 0.3s ease;
+    @media(max-width:860px){ .g3{grid-template-columns:1fr 1fr;} .g2,.g2r{grid-template-columns:1fr;} .modal-stats{grid-template-columns:1fr 1fr;} }
+    @media(max-width:640px){
+      .header{padding:14px 16px;} .logo-sub{display:none;} .main{padding:16px;} .card{padding:18px;} .g3{grid-template-columns:1fr;gap:12px;}
+      .heatmap-grid{grid-template-columns:repeat(3,1fr);} .form-row{flex-direction:column;} .btn{width:100%;text-align:center;}
+      .stat-val{font-size:22px;} .ptable th:nth-child(3),.ptable td:nth-child(3){display:none;}
+      .modal-panel{width:100vw;} .modal-stats{grid-template-columns:1fr;} .modal-body{padding:16px;}
     }
-    .alert-banner-title { color: var(--gold); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 860px) {
-      .g3  { grid-template-columns: 1fr 1fr; }
-      .g2, .g2r { grid-template-columns: 1fr; }
-      .modal-stats { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 640px) {
-      .header { padding: 14px 16px; }
-      .logo-sub { display: none; }
-      .main { padding: 16px; }
-      .nav-tabs { padding: 14px 16px 0; }
-      .card { padding: 18px; }
-      .g3 { grid-template-columns: 1fr; gap: 12px; }
-      .heatmap-grid { grid-template-columns: repeat(3, 1fr); }
-      .form-row { flex-direction: column; }
-      .btn { width: 100%; text-align: center; }
-      .stat-val { font-size: 22px; }
-      .ptable th:nth-child(3), .ptable td:nth-child(3) { display: none; }
-      .modal-panel { width: 100vw; }
-      .modal-stats { grid-template-columns: 1fr; }
-      .modal-body { padding: 16px; }
-    }
-    @media (max-width: 400px) {
-      .heatmap-grid { grid-template-columns: repeat(2, 1fr); }
-    }
+    @media(max-width:400px){ .heatmap-grid{grid-template-columns:repeat(2,1fr);} }
   </style>
 </head>
 <body>
 
-  <!-- Ticker Bar -->
   <div class="ticker-wrap">
     <div class="ticker-badge">LIVE</div>
     <div class="ticker-scroll">
-      <div id="tickerTrack" class="ticker-track">Loading market data…</div>
+      <div id="tickerTrack" class="ticker-track">Fetching market data…</div>
     </div>
   </div>
 
-  <!-- Header -->
   <header class="header">
     <div class="logo">
       <span class="logo-mark">PFT-X</span>
@@ -501,14 +189,6 @@
       <span id="lastUpdated">—</span>
     </div>
   </header>
-
-  <!-- Nav Tabs -->
-  <div class="nav-tabs">
-    <button class="tab active" onclick="switchTab('portfolio',this)">Portfolio</button>
-    <button class="tab" onclick="switchTab('market',this)">Market</button>
-    <button class="tab" onclick="switchTab('watchlist',this)">Watchlist</button>
-    <button class="tab" onclick="switchTab('alerts',this)">Alerts</button>
-  </div>
 
   <!-- Stock Detail Modal -->
   <div class="modal-overlay" id="stockModal" onclick="handleModalClick(event)">
@@ -522,19 +202,15 @@
       </div>
       <div class="modal-body">
         <div class="modal-stats" id="modalStats"></div>
-        <div class="chart-hint">
-          Click a <span class="peak">◆ peak</span> or <span class="trough">◆ trough</span> marker for an AI explanation of what drove that move
-        </div>
-        <div id="chartLoadingState" class="chart-loading">
-          <div class="spinner"></div> Loading 5-year history…
-        </div>
-        <div id="chartWrap" style="display:none; position:relative; margin-bottom:20px;">
+        <div class="chart-hint">Click a <span>◆ peak</span> or <span style="color:var(--red)">◆ trough</span> for an AI analysis of what drove that move</div>
+        <div id="chartLoadingState" class="chart-loading"><div class="spinner"></div> Loading 5-year history…</div>
+        <div class="chart-wrap" id="chartWrap" style="display:none">
           <canvas id="stockChart"></canvas>
         </div>
         <div class="explain-box" id="explainBox">
           <div class="explain-label" id="explainLabel">AI Analysis</div>
-          <div class="explain-date"  id="explainDate"></div>
-          <div class="explain-text"  id="explainText"></div>
+          <div class="explain-date" id="explainDate"></div>
+          <div class="explain-text" id="explainText"></div>
         </div>
         <div style="margin-top:24px">
           <div class="s-head" style="margin-bottom:14px">Recent Headlines</div>
@@ -544,87 +220,53 @@
     </div>
   </div>
 
-  <!-- Main -->
   <main class="main">
 
-    <!-- ───── PORTFOLIO TAB ───── -->
-    <div id="tab-portfolio">
-
-      <div class="card mb">
-        <div class="s-head">Add Position</div>
-        <div class="form-row">
-          <div class="fg"><label class="f-label">Ticker</label><input id="ticker" class="f-input" placeholder="e.g. AAPL"></div>
-          <div class="fg"><label class="f-label">Shares</label><input id="shares" class="f-input" type="number" min="0" placeholder="0"></div>
-          <div class="fg"><label class="f-label">Buy Price (£)</label><input id="buyPrice" class="f-input" type="number" min="0" step="0.01" placeholder="0.00"></div>
-          <button class="btn" onclick="addStock()">Add Position</button>
-        </div>
-        <div id="portfolioTableWrap">
-          <div class="empty"><div class="empty-icon">◈</div>Add a position above to begin tracking</div>
-        </div>
+    <!-- Portfolio -->
+    <div class="card mb">
+      <div class="s-head">Portfolio</div>
+      <div class="form-row">
+        <div class="fg"><label class="f-label">Ticker</label><input id="ticker" class="f-input" placeholder="e.g. AAPL"></div>
+        <div class="fg"><label class="f-label">Shares</label><input id="shares" class="f-input" type="number" min="0" placeholder="0"></div>
+        <div class="fg"><label class="f-label">Buy Price (£)</label><input id="buyPrice" class="f-input" type="number" min="0" step="0.01" placeholder="0.00"></div>
+        <button class="btn" onclick="addStock()">Add Position</button>
       </div>
-
-      <div class="g3">
-        <div class="card" style="padding:20px"><div class="stat-label">Portfolio Value</div><div class="stat-val gold" id="portfolioValue">£0.00</div></div>
-        <div class="card" style="padding:20px"><div class="stat-label">Total P&amp;L</div><div class="stat-val" id="portfolioProfit">£0.00</div></div>
-        <div class="card" style="padding:20px"><div class="stat-label">AI Score</div><div class="stat-val gold" id="aiScore">—</div></div>
+      <div id="portfolioTableWrap">
+        <div class="empty"><div class="empty-icon">◈</div>Add a position above to begin tracking</div>
       </div>
+    </div>
 
-      <div class="g2">
-        <div class="card">
-          <div class="s-head">Portfolio Allocation</div>
-          <div id="allocationEmpty" class="empty"><div class="empty-icon">◈</div>No positions yet</div>
-          <canvas id="allocationChart" style="display:none"></canvas>
-        </div>
-        <div class="card">
-          <div class="s-head">Monte Carlo Simulation <span class="s-head-note">30-day</span></div>
-          <div id="monteEmpty" class="empty"><div class="empty-icon">◈</div>No positions yet</div>
-          <canvas id="monteChart" style="display:none"></canvas>
-        </div>
+    <!-- Stats -->
+    <div class="g3">
+      <div class="card" style="padding:20px"><div class="stat-label">Portfolio Value</div><div class="stat-val" id="portfolioValue">£0.00</div></div>
+      <div class="card" style="padding:20px"><div class="stat-label">Total P&amp;L</div><div class="stat-val" id="portfolioProfit">£0.00</div></div>
+      <div class="card" style="padding:20px"><div class="stat-label">AI Score</div><div class="stat-val gold" id="aiScore">—</div></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="g2">
+      <div class="card">
+        <div class="s-head">Portfolio Allocation</div>
+        <div id="allocationEmpty" class="empty"><div class="empty-icon">◈</div>No positions yet</div>
+        <canvas id="allocationChart" style="display:none"></canvas>
       </div>
-
-    </div><!-- end tab-portfolio -->
-
-    <!-- ───── MARKET TAB ───── -->
-    <div id="tab-market" style="display:none">
-
-      <div class="card mb">
-        <div class="s-head">Market Heatmap <span class="s-head-note">Click any stock to open 5-year chart</span></div>
-        <div id="heatmap" class="heatmap-grid"></div>
+      <div class="card">
+        <div class="s-head">Monte Carlo Simulation <span class="s-head-note">30-day</span></div>
+        <div id="monteEmpty" class="empty"><div class="empty-icon">◈</div>No positions yet</div>
+        <canvas id="monteChart" style="display:none"></canvas>
       </div>
+    </div>
 
-      <div class="g2">
-        <div class="card">
-          <div class="s-head">Market News</div>
-          <div id="newsFeed" class="news-list"><div class="empty"><div class="empty-icon">◈</div>Loading headlines…</div></div>
-        </div>
-        <div class="card">
-          <div class="s-head">Hedge Fund Tracker</div>
-          <table class="htable">
-            <thead><tr><th>Fund</th><th>Stock</th><th>Position</th><th>Action</th></tr></thead>
-            <tbody id="hedgeTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-    </div><!-- end tab-market -->
-
-    <!-- ───── WATCHLIST TAB ───── -->
-    <div id="tab-watchlist" style="display:none">
+    <!-- Watchlist + Alerts -->
+    <div class="g2r">
       <div class="card">
         <div class="s-head">Watchlist</div>
-        <div class="form-row" style="margin-bottom:20px">
-          <div class="fg" style="max-width:260px">
-            <label class="f-label">Add Ticker</label>
-            <input id="watchInput" class="f-input" placeholder="e.g. NVDA" onkeydown="if(event.key==='Enter')addWatch()">
-          </div>
+        <div class="form-row" style="margin-bottom:16px">
+          <div class="fg"><label class="f-label">Add Ticker</label><input id="watchInput" class="f-input" placeholder="e.g. NVDA" onkeydown="if(event.key==='Enter')addWatch()"></div>
           <button class="btn btn-sm" onclick="addWatch()">Watch</button>
         </div>
         <div id="watchTableWrap"><div class="empty"><div class="empty-icon">◈</div>No stocks on your watchlist</div></div>
       </div>
-    </div><!-- end tab-watchlist -->
-
-    <!-- ───── ALERTS TAB ───── -->
-    <div id="tab-alerts" style="display:none">
       <div class="card">
         <div class="s-head">Price Alerts</div>
         <div class="form-row" style="margin-bottom:4px">
@@ -636,20 +278,41 @@
               <option value="below">↓ Below</option>
             </select>
           </div>
-          <button class="btn btn-sm" onclick="addAlert()">Set Alert</button>
+          <button class="btn btn-sm" onclick="addAlert()">Set</button>
         </div>
         <div class="alerts-wrap" id="alertsWrap">
           <div style="width:100%;text-align:center;padding:16px 0;color:var(--text-3);font-size:12px">No alerts set</div>
         </div>
       </div>
-    </div><!-- end tab-alerts -->
+    </div>
+
+    <!-- Heatmap -->
+    <div class="card mb">
+      <div class="s-head">Market Heatmap</div>
+      <div id="heatmap" class="heatmap-grid"></div>
+    </div>
+
+    <!-- News Feed -->
+    <div class="card mb">
+      <div class="s-head">Market News</div>
+      <div id="newsFeed" class="news-list"><div class="empty"><div class="empty-icon">◈</div>Loading headlines…</div></div>
+    </div>
+
+    <!-- Hedge Funds -->
+    <div class="card">
+      <div class="s-head">Hedge Fund Tracker</div>
+      <table class="htable">
+        <thead><tr><th>Fund</th><th>Stock</th><th>Position</th><th>Action</th></tr></thead>
+        <tbody id="hedgeTable"></tbody>
+      </table>
+    </div>
 
   </main>
 
 <script>
-// ═══════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
 let portfolio   = [];
 let watchlist   = [];
 let alerts      = [];
@@ -657,598 +320,381 @@ let allocationChart = null;
 let monteChart      = null;
 let stockChart      = null;
 
-// ═══════════════════════════════════════════
-//  TABS
-// ═══════════════════════════════════════════
-function switchTab(id, btn) {
-  ['portfolio','market','watchlist','alerts'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===id ? '' : 'none';
-  });
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// ═══════════════════════════════════════════
-//  API HELPERS
-// ═══════════════════════════════════════════
+// ═══════════════════════════════
+// API
+// ═══════════════════════════════
 async function fetchPrice(ticker) {
-  try {
-    const r = await fetch(`/api/stock?ticker=${ticker}`);
-    const d = await r.json();
-    return d.price ?? null;
-  } catch { return null; }
+  try { const r=await fetch(`/api/stock?ticker=${ticker}`); const d=await r.json(); return d.price??null; }
+  catch { return null; }
 }
-
 async function fetchHistory(ticker) {
-  try {
-    const r = await fetch(`/api/history?ticker=${ticker}`);
-    return await r.json();
-  } catch { return null; }
+  try { const r=await fetch(`/api/history?ticker=${ticker}`); return await r.json(); }
+  catch { return null; }
 }
-
 async function fetchNews(ticker) {
-  try {
-    const url = ticker ? `/api/news?ticker=${ticker}` : `/api/news`;
-    const r   = await fetch(url);
-    return await r.json();
-  } catch { return []; }
+  try { const url=ticker?`/api/news?ticker=${ticker}`:`/api/news`; const r=await fetch(url); return await r.json(); }
+  catch { return []; }
 }
-
 async function fetchExplanation(ticker, date, price, type) {
   try {
-    const r = await fetch('/api/explain', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ticker, date, price, type }),
-    });
-    const d = await r.json();
-    return d.explanation || 'No explanation available.';
+    const r=await fetch('/api/explain',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticker,date,price,type})});
+    const d=await r.json(); return d.explanation||'No explanation available.';
   } catch { return 'Unable to retrieve explanation at this time.'; }
 }
 
-// ═══════════════════════════════════════════
-//  PORTFOLIO
-// ═══════════════════════════════════════════
-window.addStock = async function () {
-  const ticker   = document.getElementById('ticker').value.trim().toUpperCase();
-  const shares   = parseFloat(document.getElementById('shares').value);
-  const buyPrice = parseFloat(document.getElementById('buyPrice').value);
-  const inputs   = ['ticker','shares','buyPrice'].map(id => document.getElementById(id));
-
-  if (!ticker || !shares || !buyPrice || shares <= 0 || buyPrice <= 0) {
-    inputs.forEach(el => { el.classList.add('err'); setTimeout(() => el.classList.remove('err'), 1800); });
-    return;
+// ═══════════════════════════════
+// PORTFOLIO
+// ═══════════════════════════════
+window.addStock = async function() {
+  const ticker=document.getElementById('ticker').value.trim().toUpperCase();
+  const shares=parseFloat(document.getElementById('shares').value);
+  const buyPrice=parseFloat(document.getElementById('buyPrice').value);
+  const inputs=document.querySelectorAll('#ticker,#shares,#buyPrice');
+  if(!ticker||!shares||!buyPrice||shares<=0||buyPrice<=0){
+    inputs.forEach(el=>{el.classList.add('err');setTimeout(()=>el.classList.remove('err'),1800);}); return;
   }
-
-  portfolio.push({ ticker, shares, buyPrice, currentPrice: buyPrice });
-  inputs.forEach(el => el.value = '');
-  document.getElementById('ticker').focus();
+  portfolio.push({ticker,shares,buyPrice,currentPrice:buyPrice});
+  inputs.forEach(el=>el.value=''); document.getElementById('ticker').focus();
   await updateDashboard();
 };
+window.removeStock = function(i){portfolio.splice(i,1);updateDashboard();};
 
-window.removeStock = function (i) { portfolio.splice(i, 1); updateDashboard(); };
-
-function renderPortfolioTable(prices) {
-  const wrap = document.getElementById('portfolioTableWrap');
-  if (portfolio.length === 0) {
-    wrap.innerHTML = `<div class="empty"><div class="empty-icon">◈</div>Add a position above to begin tracking</div>`;
-    return;
-  }
-  const rows = portfolio.map((s, i) => {
-    const cur  = prices[s.ticker] ?? s.buyPrice;
-    const val  = s.shares * cur;
-    const cost = s.shares * s.buyPrice;
-    const pnl  = val - cost;
-    const pct  = cost > 0 ? ((pnl / cost) * 100).toFixed(2) : '0.00';
-    const cls  = pnl >= 0 ? 'pos' : 'neg';
-    const sign = pnl >= 0 ? '+' : '−';
-    return `<tr>
+function renderPortfolioTable(prices){
+  const wrap=document.getElementById('portfolioTableWrap');
+  if(portfolio.length===0){wrap.innerHTML=`<div class="empty"><div class="empty-icon">◈</div>Add a position above to begin tracking</div>`;return;}
+  const rows=portfolio.map((s,i)=>{
+    const cur=prices[s.ticker]??s.buyPrice;
+    const val=s.shares*cur, cost=s.shares*s.buyPrice, pnl=val-cost;
+    const pct=cost>0?((pnl/cost)*100).toFixed(2):'0.00';
+    const cls=pnl>=0?'pos':'neg', sign=pnl>=0?'+':'−';
+    return `<tr class="fade">
       <td><span class="ticker-link" onclick="openStockModal('${s.ticker}')">${s.ticker}</span></td>
-      <td>${s.shares.toLocaleString()}</td>
-      <td>£${s.buyPrice.toFixed(2)}</td>
-      <td>${cur ? '£' + cur.toFixed(2) : '—'}</td>
-      <td>£${val.toFixed(2)}</td>
+      <td>${s.shares.toLocaleString()}</td><td>£${s.buyPrice.toFixed(2)}</td>
+      <td>${cur?'£'+cur.toFixed(2):'—'}</td><td>£${val.toFixed(2)}</td>
       <td class="${cls}">${sign}£${Math.abs(pnl).toFixed(2)} <span style="opacity:.55">(${pnl>=0?'+':''}${pct}%)</span></td>
       <td><button class="rmv-btn" onclick="removeStock(${i})">✕</button></td>
     </tr>`;
   }).join('');
-  wrap.innerHTML = `<table class="ptable">
-    <thead><tr><th>Ticker</th><th>Shares</th><th>Avg Cost</th><th>Current</th><th>Value</th><th>P&amp;L</th><th></th></tr></thead>
-    <tbody>${rows}</tbody>
-  </table>`;
+  wrap.innerHTML=`<table class="ptable"><thead><tr><th>Ticker</th><th>Shares</th><th>Avg Cost</th><th>Current</th><th>Value</th><th>P&amp;L</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-// ═══════════════════════════════════════════
-//  AI SCORE
-// ═══════════════════════════════════════════
-function updateAIScore(prices) {
-  const el = document.getElementById('aiScore');
-  if (portfolio.length === 0) { el.textContent = '—'; el.className = 'stat-val gold'; return; }
-  let score = 50;
-  portfolio.forEach(s => {
-    const p = prices[s.ticker]; if (!p) return;
-    const pct = ((p - s.buyPrice) / s.buyPrice) * 100;
-    if      (pct >  15) score += 12;
-    else if (pct >   5) score += 6;
-    else if (pct >   0) score += 2;
-    else if (pct < -15) score -= 10;
-    else if (pct <  -5) score -= 5;
-    else                score -= 2;
+// ═══════════════════════════════
+// AI SCORE
+// ═══════════════════════════════
+function updateAIScore(prices){
+  const el=document.getElementById('aiScore');
+  if(portfolio.length===0){el.textContent='—';el.className='stat-val gold';return;}
+  let score=50;
+  portfolio.forEach(s=>{
+    const p=prices[s.ticker];if(!p)return;
+    const pct=((p-s.buyPrice)/s.buyPrice)*100;
+    if(pct>15)score+=12;else if(pct>5)score+=6;else if(pct>0)score+=2;
+    else if(pct<-15)score-=10;else if(pct<-5)score-=5;else score-=2;
   });
-  if (portfolio.length >= 3) score += 5;
-  if (portfolio.length >= 6) score += 5;
-  score = Math.max(0, Math.min(100, Math.round(score)));
-  el.textContent = `${score} / 100`;
-  el.className   = 'stat-val ' + (score >= 60 ? 'pos' : score >= 40 ? 'gold' : 'neg');
+  if(portfolio.length>=3)score+=5;if(portfolio.length>=6)score+=5;
+  score=Math.max(0,Math.min(100,Math.round(score)));
+  el.textContent=`${score} / 100`;
+  el.className='stat-val '+(score>=60?'pos':score>=40?'gold':'neg');
 }
 
-// ═══════════════════════════════════════════
-//  ALLOCATION CHART
-// ═══════════════════════════════════════════
-function drawAllocationChart() {
-  const empty  = document.getElementById('allocationEmpty');
-  const canvas = document.getElementById('allocationChart');
-  if (portfolio.length === 0) { empty.style.display='block'; canvas.style.display='none'; return; }
-  empty.style.display = 'none'; canvas.style.display = 'block';
-  const palette = ['#C9A84C','#4A8ECA','#4CAF7E','#CF5C5C','#9B7EDE','#E8886C','#5CC4CF','#E8D5A3'];
-  if (allocationChart) allocationChart.destroy();
-  allocationChart = new Chart(canvas, {
-    type: 'doughnut',
-    data: {
-      labels: portfolio.map(s => s.ticker),
-      datasets: [{
-        data: portfolio.map(s => s.shares * (s.currentPrice || s.buyPrice)),
-        backgroundColor: palette.slice(0, portfolio.length),
-        borderColor: '#0C1018',
-        borderWidth: 3,
-        hoverBorderWidth: 4,
-      }]
-    },
-    options: {
-      cutout: '66%',
-      animation: { duration: 600 },
-      plugins: { legend: { position: 'bottom', labels: { color: '#8A8FA8', font: { family: 'IBM Plex Mono', size: 11 }, boxWidth: 10, padding: 14 } } }
-    }
+// ═══════════════════════════════
+// ALLOCATION CHART
+// ═══════════════════════════════
+function drawAllocationChart(){
+  const empty=document.getElementById('allocationEmpty'), canvas=document.getElementById('allocationChart');
+  if(portfolio.length===0){empty.style.display='block';canvas.style.display='none';return;}
+  empty.style.display='none';canvas.style.display='block';
+  const palette=['#C9A84C','#4A8ECA','#4CAF7E','#CF5C5C','#9B7EDE','#E8886C','#5CC4CF','#E8D5A3'];
+  if(allocationChart)allocationChart.destroy();
+  allocationChart=new Chart(canvas,{
+    type:'doughnut',
+    data:{labels:portfolio.map(s=>s.ticker),datasets:[{data:portfolio.map(s=>s.shares*(s.currentPrice||s.buyPrice)),backgroundColor:palette.slice(0,portfolio.length),borderColor:'#0C1018',borderWidth:3,hoverBorderWidth:4}]},
+    options:{cutout:'66%',animation:{duration:600},plugins:{legend:{position:'bottom',labels:{color:'#8A8FA8',font:{family:'IBM Plex Mono',size:11},boxWidth:10,padding:14}}}}
   });
 }
 
-// ═══════════════════════════════════════════
-//  MONTE CARLO
-// ═══════════════════════════════════════════
-function runMonteCarlo(startValue) {
-  const empty  = document.getElementById('monteEmpty');
-  const canvas = document.getElementById('monteChart');
-  if (!startValue || startValue === 0) { empty.style.display='block'; canvas.style.display='none'; return; }
-  empty.style.display = 'none'; canvas.style.display = 'block';
-  const sims=200, days=30;
-  let paths=[], avg=new Array(days).fill(0);
-  for (let s=0; s<sims; s++) {
-    let vals=[], v=startValue;
-    for (let d=0; d<days; d++) { v *= 1+(Math.random()*0.06-0.028); vals.push(v); avg[d]+=v; }
-    paths.push(vals);
-  }
-  avg = avg.map(v => v / sims);
-  let best=paths[0], worst=paths[0];
-  for (const p of paths) { if(p[days-1]>best[days-1])best=p; if(p[days-1]<worst[days-1])worst=p; }
-  if (monteChart) monteChart.destroy();
-  monteChart = new Chart(canvas, {
-    type: 'line',
-    data: { labels: Array.from({length:days},(_,i)=>`D${i+1}`), datasets: [
-      { label:'Best',     data:best,  borderColor:'#4CAF7E', borderWidth:1.5, pointRadius:0, tension:0.4, fill:false },
-      { label:'Expected', data:avg,   borderColor:'#C9A84C', borderWidth:2.5, pointRadius:0, tension:0.4, fill:false },
-      { label:'Worst',    data:worst, borderColor:'#CF5C5C', borderWidth:1.5, pointRadius:0, tension:0.4, fill:false },
+// ═══════════════════════════════
+// MONTE CARLO
+// ═══════════════════════════════
+function runMonteCarlo(startValue){
+  const empty=document.getElementById('monteEmpty'), canvas=document.getElementById('monteChart');
+  if(!startValue||startValue===0){empty.style.display='block';canvas.style.display='none';return;}
+  empty.style.display='none';canvas.style.display='block';
+  const sims=200,days=30;let paths=[],avg=new Array(days).fill(0);
+  for(let s=0;s<sims;s++){let vals=[],v=startValue;for(let d=0;d<days;d++){v*=1+(Math.random()*0.06-0.028);vals.push(v);avg[d]+=v;}paths.push(vals);}
+  avg=avg.map(v=>v/sims);
+  let best=paths[0],worst=paths[0];for(const p of paths){if(p[days-1]>best[days-1])best=p;if(p[days-1]<worst[days-1])worst=p;}
+  if(monteChart)monteChart.destroy();
+  monteChart=new Chart(canvas,{
+    type:'line',
+    data:{labels:Array.from({length:days},(_,i)=>`D${i+1}`),datasets:[
+      {label:'Best',data:best,borderColor:'#4CAF7E',borderWidth:1.5,pointRadius:0,tension:0.4,fill:false},
+      {label:'Expected',data:avg,borderColor:'#C9A84C',borderWidth:2.5,pointRadius:0,tension:0.4,fill:false},
+      {label:'Worst',data:worst,borderColor:'#CF5C5C',borderWidth:1.5,pointRadius:0,tension:0.4,fill:false},
     ]},
-    options: {
-      animation: { duration: 500 },
-      plugins: { legend: { labels: { color:'#8A8FA8', font:{family:'IBM Plex Mono',size:11}, boxWidth:10 } } },
-      scales: {
-        x: { ticks:{color:'#4A4F62',font:{family:'IBM Plex Mono',size:10}}, grid:{color:'rgba(255,255,255,0.03)'} },
-        y: { ticks:{color:'#4A4F62',font:{family:'IBM Plex Mono',size:10},callback:v=>'£'+Math.round(v).toLocaleString()}, grid:{color:'rgba(255,255,255,0.03)'} }
-      }
-    }
+    options:{animation:{duration:500},plugins:{legend:{labels:{color:'#8A8FA8',font:{family:'IBM Plex Mono',size:11},boxWidth:10}}},
+      scales:{x:{ticks:{color:'#4A4F62',font:{family:'IBM Plex Mono',size:10}},grid:{color:'rgba(255,255,255,0.03)'}},
+              y:{ticks:{color:'#4A4F62',font:{family:'IBM Plex Mono',size:10},callback:v=>'£'+Math.round(v).toLocaleString()},grid:{color:'rgba(255,255,255,0.03)'}}}}
   });
 }
 
-// ═══════════════════════════════════════════
-//  HEATMAP
-// ═══════════════════════════════════════════
-function createHeatmap() {
-  const stocks    = ['AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META','RR.L','RIO','BP'];
-  const container = document.getElementById('heatmap');
-  container.replaceChildren();
-  stocks.forEach(stock => {
-    const change = (Math.random() * 7 - 3).toFixed(2);
-    const pos    = parseFloat(change) >= 0;
-    const box    = document.createElement('div');
-    box.className = `h-cell ${pos ? 'h-pos' : 'h-neg'}`;
-    box.onclick   = () => openStockModal(stock);
-    box.innerHTML = `<span class="hn">${stock}</span><span class="hp">${pos?'+':''}${change}%</span>`;
+// ═══════════════════════════════
+// HEATMAP
+// ═══════════════════════════════
+function createHeatmap(){
+  const stocks=['AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META','RR.L','RIO','BP'];
+  const container=document.getElementById('heatmap');container.replaceChildren();
+  stocks.forEach(stock=>{
+    const change=(Math.random()*7-3).toFixed(2),pos=parseFloat(change)>=0;
+    const box=document.createElement('div');box.className=`h-cell ${pos?'h-pos':'h-neg'}`;
+    box.onclick=()=>openStockModal(stock);
+    box.innerHTML=`<span class="hn">${stock}</span><span class="hp">${pos?'+':''}${change}%</span>`;
     container.appendChild(box);
   });
 }
 
-// ═══════════════════════════════════════════
-//  NEWS FEED
-// ═══════════════════════════════════════════
-async function loadNewsFeed() {
-  const articles = await fetchNews(null);
-  renderNewsList('newsFeed', articles, 'news-item');
-}
-
-function renderNewsList(containerId, articles, itemClass) {
-  const el = document.getElementById(containerId);
-  if (!articles || articles.length === 0) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">◈</div>No headlines available</div>`;
-    return;
-  }
-  el.innerHTML = articles.slice(0, 6).map(a => {
-    const date = a.datetime
-      ? new Date(a.datetime * 1000).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'})
-      : '';
-    return `<div class="${itemClass}">
-      <div class="news-source">${a.source || 'Market News'}</div>
-      <div class="news-title"><a href="${a.url||'#'}" target="_blank" rel="noopener">${a.headline || a.title || 'View article'}</a></div>
-      <div class="news-date">${date}</div>
-    </div>`;
+// ═══════════════════════════════
+// NEWS
+// ═══════════════════════════════
+async function loadNewsFeed(){
+  const articles=await fetchNews(null);
+  const el=document.getElementById('newsFeed');
+  if(!articles||articles.length===0){el.innerHTML=`<div class="empty"><div class="empty-icon">◈</div>No headlines available</div>`;return;}
+  el.className='news-list';
+  el.innerHTML=articles.slice(0,6).map(a=>{
+    const date=a.datetime?new Date(a.datetime*1000).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+    return `<div class="news-item"><div class="news-source">${a.source||'Market News'}</div><div class="news-title"><a href="${a.url||'#'}" target="_blank" rel="noopener">${a.headline||a.title||'View article'}</a></div><div class="news-date">${date}</div></div>`;
   }).join('');
 }
 
-// ═══════════════════════════════════════════
-//  HEDGE FUNDS
-// ═══════════════════════════════════════════
-function loadHedgeFunds() {
-  const data = [
-    { fund:'Berkshire Hathaway',       stock:'AAPL', position:'$170B', action:'Hold' },
-    { fund:'Bridgewater Associates',   stock:'SPY',  position:'$4.1B', action:'Buy'  },
-    { fund:'Renaissance Technologies', stock:'NVDA', position:'$2.3B', action:'Buy'  },
-    { fund:'Two Sigma',                stock:'MSFT', position:'$3.2B', action:'Hold' },
-    { fund:'Citadel Advisors',         stock:'TSLA', position:'$1.8B', action:'Sell' },
+function renderModalNews(articles){
+  const el=document.getElementById('modalNews');
+  if(!articles||articles.length===0){el.innerHTML=`<div class="empty"><div class="empty-icon">◈</div>No headlines found</div>`;return;}
+  el.innerHTML=articles.slice(0,5).map(a=>{
+    const date=a.datetime?new Date(a.datetime*1000).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
+    return `<div class="modal-news-item"><div class="news-source">${a.source||'News'}</div><div class="news-title"><a href="${a.url||'#'}" target="_blank" rel="noopener">${a.headline||a.title||'View article'}</a></div><div class="news-date">${date}</div></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════
+// WATCHLIST
+// ═══════════════════════════════
+window.addWatch = async function(){
+  const input=document.getElementById('watchInput'),ticker=input.value.trim().toUpperCase();
+  if(!ticker||watchlist.find(w=>w.ticker===ticker)){input.classList.add('err');setTimeout(()=>input.classList.remove('err'),1800);return;}
+  input.value='';watchlist.push({ticker,price:null});await updateWatchlist();
+};
+window.removeWatch=function(i){watchlist.splice(i,1);renderWatchlistTable();};
+async function updateWatchlist(){
+  for(const w of watchlist)w.price=await fetchPrice(w.ticker);
+  renderWatchlistTable();
+}
+function renderWatchlistTable(){
+  const wrap=document.getElementById('watchTableWrap');
+  if(watchlist.length===0){wrap.innerHTML=`<div class="empty"><div class="empty-icon">◈</div>No stocks on your watchlist</div>`;return;}
+  const rows=watchlist.map((w,i)=>`<tr class="fade"><td><span class="ticker-link" onclick="openStockModal('${w.ticker}')">${w.ticker}</span></td><td>${w.price?'£'+w.price.toFixed(2):'—'}</td><td><button class="rmv-btn" onclick="removeWatch(${i})">✕</button></td></tr>`).join('');
+  wrap.innerHTML=`<table class="wtable"><thead><tr><th>Ticker</th><th>Price</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+// ═══════════════════════════════
+// PRICE ALERTS
+// ═══════════════════════════════
+window.addAlert=function(){
+  const ticker=document.getElementById('alertTicker').value.trim().toUpperCase();
+  const price=parseFloat(document.getElementById('alertPrice').value);
+  const dir=document.getElementById('alertDir').value;
+  if(!ticker||!price||price<=0)return;
+  alerts.push({ticker,price,dir,triggered:false,id:Date.now()});
+  document.getElementById('alertTicker').value='';document.getElementById('alertPrice').value='';
+  renderAlerts();
+  if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();
+};
+window.removeAlert=function(id){alerts=alerts.filter(a=>a.id!==id);renderAlerts();};
+
+function renderAlerts(){
+  const wrap=document.getElementById('alertsWrap');
+  if(alerts.length===0){wrap.innerHTML=`<div style="width:100%;text-align:center;padding:16px 0;color:var(--text-3);font-size:12px">No alerts set</div>`;return;}
+  wrap.innerHTML=alerts.map(a=>`<div class="alert-pill ${a.triggered?'triggered':''}" id="apill-${a.id}"><span class="ap-ticker">${a.ticker}</span><span class="ap-dir">${a.dir==='above'?'↑':'↓'}</span><span class="ap-price">£${a.price.toFixed(2)}</span><button onclick="removeAlert(${a.id})">✕</button></div>`).join('');
+}
+
+function checkAlerts(prices){
+  for(const alert of alerts){
+    if(alert.triggered)continue;
+    const price=prices[alert.ticker];if(!price)continue;
+    const hit=alert.dir==='above'?price>=alert.price:price<=alert.price;
+    if(hit){
+      alert.triggered=true;
+      const msg=`${alert.ticker} has ${alert.dir==='above'?'risen above':'fallen below'} £${alert.price.toFixed(2)} — now £${price.toFixed(2)}`;
+      if('Notification'in window&&Notification.permission==='granted')new Notification('PFT-X Price Alert',{body:msg});
+      const el=document.createElement('div');
+      el.style.cssText='position:fixed;bottom:24px;right:24px;background:#0C1018;border:1px solid var(--gold-border);border-radius:10px;padding:14px 18px;max-width:320px;z-index:9999;font-size:13px;color:var(--text-1);box-shadow:0 8px 32px rgba(0,0,0,.5);animation:fadeIn .3s ease';
+      el.innerHTML=`<div style="color:var(--gold);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">🔔 Alert Triggered</div>${msg}`;
+      document.body.appendChild(el);setTimeout(()=>el.remove(),6000);
+      renderAlerts();
+    }
+  }
+}
+
+// ═══════════════════════════════
+// HEDGE FUNDS
+// ═══════════════════════════════
+function loadHedgeFunds(){
+  const data=[
+    {fund:'Berkshire Hathaway',    stock:'AAPL',position:'$170B',action:'Hold'},
+    {fund:'Bridgewater Associates',stock:'SPY', position:'$4.1B',action:'Buy'},
+    {fund:'Renaissance Technologies',stock:'NVDA',position:'$2.3B',action:'Buy'},
+    {fund:'Two Sigma',             stock:'MSFT',position:'$3.2B',action:'Hold'},
+    {fund:'Citadel Advisors',      stock:'TSLA',position:'$1.8B',action:'Sell'},
   ];
-  const tbody = document.getElementById('hedgeTable');
-  tbody.innerHTML = '';
-  data.forEach(row => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${row.fund}</td>
-      <td><span class="ticker-link" onclick="openStockModal('${row.stock}')">${row.stock}</span></td>
-      <td>${row.position}</td>
-      <td class="action-${row.action.toLowerCase()}">${row.action}</td>`;
+  const tbody=document.getElementById('hedgeTable');tbody.innerHTML='';
+  data.forEach(row=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${row.fund}</td><td><span class="ticker-link" onclick="openStockModal('${row.stock}')">${row.stock}</span></td><td>${row.position}</td><td class="action-${row.action.toLowerCase()}">${row.action}</td>`;
     tbody.appendChild(tr);
   });
 }
 
-// ═══════════════════════════════════════════
-//  WATCHLIST
-// ═══════════════════════════════════════════
-window.addWatch = async function () {
-  const input  = document.getElementById('watchInput');
-  const ticker = input.value.trim().toUpperCase();
-  if (!ticker || watchlist.find(w => w.ticker === ticker)) {
-    input.classList.add('err');
-    setTimeout(() => input.classList.remove('err'), 1800);
-    return;
+// ═══════════════════════════════
+// TICKER BAR
+// ═══════════════════════════════
+async function updateTickerBar(){
+  const tickers=['AAPL','MSFT','NVDA','TSLA','GOOGL','META','AMZN','RIO','BP','BABA'];
+  const container=document.getElementById('tickerTrack');let html='';
+  for(const ticker of tickers){
+    const price=await fetchPrice(ticker);const change=(Math.random()*4-2).toFixed(2);
+    const pos=parseFloat(change)>=0,color=pos?'#4CAF7E':'#CF5C5C',arrow=pos?'▲':'▼';
+    html+=`<span style="margin:0 22px;color:${color}"><span style="color:#6A7085;margin-right:5px">${ticker}</span>£${price?price.toFixed(2):'—'} ${arrow} ${Math.abs(change)}%</span>`;
   }
-  input.value = '';
-  watchlist.push({ ticker, price: null });
-  await updateWatchlist();
-};
-
-window.removeWatch = function (i) { watchlist.splice(i, 1); renderWatchlistTable(); };
-
-async function updateWatchlist() {
-  for (const w of watchlist) w.price = await fetchPrice(w.ticker);
-  renderWatchlistTable();
+  container.innerHTML=html+html;
 }
 
-function renderWatchlistTable() {
-  const wrap = document.getElementById('watchTableWrap');
-  if (watchlist.length === 0) {
-    wrap.innerHTML = `<div class="empty"><div class="empty-icon">◈</div>No stocks on your watchlist</div>`;
-    return;
+// ═══════════════════════════════
+// PEAK / TROUGH DETECTION
+// ═══════════════════════════════
+function findPeaksAndTroughs(prices,topN=3){
+  const n=prices.length,win=3,peaks=[],troughs=[];
+  for(let i=win;i<n-win;i++){
+    const slice=prices.slice(i-win,i+win+1),val=prices[i];
+    if(val===Math.max(...slice))peaks.push(i);
+    if(val===Math.min(...slice))troughs.push(i);
   }
-  const rows = watchlist.map((w, i) => `<tr>
-    <td><span class="ticker-link" onclick="openStockModal('${w.ticker}')">${w.ticker}</span></td>
-    <td>${w.price ? '£' + w.price.toFixed(2) : '—'}</td>
-    <td><button class="rmv-btn" onclick="removeWatch(${i})">✕</button></td>
-  </tr>`).join('');
-  wrap.innerHTML = `<table class="wtable">
-    <thead><tr><th>Ticker</th><th>Price</th><th></th></tr></thead>
-    <tbody>${rows}</tbody>
-  </table>`;
-}
-
-// ═══════════════════════════════════════════
-//  PRICE ALERTS
-// ═══════════════════════════════════════════
-window.addAlert = function () {
-  const ticker = document.getElementById('alertTicker').value.trim().toUpperCase();
-  const price  = parseFloat(document.getElementById('alertPrice').value);
-  const dir    = document.getElementById('alertDir').value;
-  if (!ticker || !price || price <= 0) return;
-  alerts.push({ ticker, price, dir, triggered: false, id: Date.now() });
-  document.getElementById('alertTicker').value = '';
-  document.getElementById('alertPrice').value  = '';
-  renderAlerts();
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
-  }
-};
-
-window.removeAlert = function (id) { alerts = alerts.filter(a => a.id !== id); renderAlerts(); };
-
-function renderAlerts() {
-  const wrap = document.getElementById('alertsWrap');
-  if (alerts.length === 0) {
-    wrap.innerHTML = `<div style="width:100%;text-align:center;padding:16px 0;color:var(--text-3);font-size:12px">No alerts set</div>`;
-    return;
-  }
-  wrap.innerHTML = alerts.map(a => `
-    <div class="alert-pill ${a.triggered ? 'triggered' : ''}">
-      <span class="ap-ticker">${a.ticker}</span>
-      <span class="ap-dir">${a.dir === 'above' ? '↑' : '↓'}</span>
-      <span class="ap-price">£${a.price.toFixed(2)}</span>
-      ${a.triggered ? '<span class="ap-hit">✓ HIT</span>' : ''}
-      <button onclick="removeAlert(${a.id})">✕</button>
-    </div>`).join('');
-}
-
-function checkAlerts(prices) {
-  let anyTriggered = false;
-  for (const alert of alerts) {
-    if (alert.triggered) continue;
-    const price = prices[alert.ticker];
-    if (!price) continue;
-    const hit = alert.dir === 'above' ? price >= alert.price : price <= alert.price;
-    if (!hit) continue;
-    alert.triggered = true;
-    anyTriggered    = true;
-    const msg = `${alert.ticker} has ${alert.dir === 'above' ? 'risen above' : 'fallen below'} £${alert.price.toFixed(2)} — now at £${price.toFixed(2)}`;
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('PFT-X Price Alert', { body: msg });
-    }
-    const banner = document.createElement('div');
-    banner.className = 'alert-banner';
-    banner.innerHTML = `<div class="alert-banner-title">🔔 Price Alert Triggered</div>${msg}`;
-    document.body.appendChild(banner);
-    setTimeout(() => banner.remove(), 6000);
-  }
-  if (anyTriggered) renderAlerts();
-}
-
-// ═══════════════════════════════════════════
-//  TICKER BAR
-// ═══════════════════════════════════════════
-async function updateTickerBar() {
-  const tickers   = ['AAPL','MSFT','NVDA','TSLA','GOOGL','META','AMZN','RIO','BP','BABA'];
-  const container = document.getElementById('tickerTrack');
-  let html = '';
-  for (const ticker of tickers) {
-    const price  = await fetchPrice(ticker);
-    const change = (Math.random() * 4 - 2).toFixed(2);
-    const pos    = parseFloat(change) >= 0;
-    const color  = pos ? '#4CAF7E' : '#CF5C5C';
-    const arrow  = pos ? '▲' : '▼';
-    html += `<span style="margin:0 22px;color:${color}">
-      <span style="color:#6A7085;margin-right:5px">${ticker}</span>
-      £${price ? price.toFixed(2) : '—'} ${arrow} ${Math.abs(change)}%
-    </span>`;
-  }
-  container.innerHTML = html + html;
-}
-
-// ═══════════════════════════════════════════
-//  PEAK / TROUGH DETECTION
-// ═══════════════════════════════════════════
-function findPeaksAndTroughs(prices, topN = 3) {
-  const n = prices.length, win = 4;
-  const peaks = [], troughs = [];
-  for (let i = win; i < n - win; i++) {
-    const sl  = prices.slice(i - win, i + win + 1);
-    const val = prices[i];
-    if (val === Math.max(...sl)) peaks.push(i);
-    if (val === Math.min(...sl)) troughs.push(i);
-  }
-  return {
-    peaks:   [...new Set(peaks)].sort((a,b) => prices[b] - prices[a]).slice(0, topN),
-    troughs: [...new Set(troughs)].sort((a,b) => prices[a] - prices[b]).slice(0, topN),
+  return{
+    peaks:peaks.sort((a,b)=>prices[b]-prices[a]).slice(0,topN),
+    troughs:troughs.sort((a,b)=>prices[a]-prices[b]).slice(0,topN)
   };
 }
 
-// ═══════════════════════════════════════════
-//  STOCK DETAIL MODAL
-// ═══════════════════════════════════════════
-window.openStockModal = async function (ticker) {
-  const modal = document.getElementById('stockModal');
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-
-  document.getElementById('modalTitle').textContent    = ticker;
-  document.getElementById('modalSubtitle').textContent = '5-Year Price History · Click markers for AI analysis';
-  document.getElementById('modalStats').innerHTML      = '';
+// ═══════════════════════════════
+// STOCK DETAIL MODAL
+// ═══════════════════════════════
+window.openStockModal = async function(ticker){
+  const modal=document.getElementById('stockModal');
+  modal.classList.add('open');document.body.style.overflow='hidden';
+  document.getElementById('modalTitle').textContent=ticker;
+  document.getElementById('modalSubtitle').textContent='5-Year Price History · Click markers for AI analysis';
+  document.getElementById('modalStats').innerHTML='';
   document.getElementById('explainBox').classList.remove('visible');
-  document.getElementById('chartLoadingState').style.display = 'flex';
-  document.getElementById('chartWrap').style.display         = 'none';
-  document.getElementById('modalNews').innerHTML = `<div class="empty"><div class="empty-icon">◈</div>Loading…</div>`;
+  document.getElementById('chartLoadingState').style.display='flex';
+  document.getElementById('chartWrap').style.display='none';
+  document.getElementById('modalNews').innerHTML=`<div class="empty"><div class="empty-icon">◈</div>Loading…</div>`;
+  if(stockChart){stockChart.destroy();stockChart=null;}
 
-  if (stockChart) { stockChart.destroy(); stockChart = null; }
+  const[histData,newsData]=await Promise.all([fetchHistory(ticker),fetchNews(ticker)]);
+  renderModalNews(newsData);
 
-  const [histData, newsData] = await Promise.all([fetchHistory(ticker), fetchNews(ticker)]);
-
-  // News
-  if (newsData) {
-    const el = document.getElementById('modalNews');
-    if (!newsData.length) {
-      el.innerHTML = `<div class="empty"><div class="empty-icon">◈</div>No headlines found</div>`;
-    } else {
-      el.innerHTML = newsData.slice(0, 5).map(a => {
-        const date = a.datetime
-          ? new Date(a.datetime * 1000).toLocaleDateString('en-GB',{day:'numeric',month:'short'})
-          : '';
-        return `<div class="modal-news-item">
-          <div class="news-source">${a.source||'News'}</div>
-          <div class="news-title"><a href="${a.url||'#'}" target="_blank" rel="noopener">${a.headline||a.title||'View article'}</a></div>
-          <div class="news-date">${date}</div>
-        </div>`;
-      }).join('');
-    }
+  if(!histData||!histData.points||histData.points.length===0){
+    document.getElementById('chartLoadingState').innerHTML='<span style="color:var(--text-3)">No history data available.</span>';return;
   }
+  document.getElementById('modalSubtitle').textContent=(histData.name||ticker)+' · 5-Year Price History';
 
-  if (!histData || !histData.points || histData.points.length === 0) {
-    document.getElementById('chartLoadingState').innerHTML = '<span style="color:var(--text-3)">No history data available.</span>';
-    return;
-  }
-
-  document.getElementById('modalSubtitle').textContent = (histData.name || ticker) + ' · 5-Year Price History';
-
-  const points = histData.points;
-  const labels = points.map(p => p.date);
-  const prices = points.map(p => p.price);
-  const first  = prices[0], last = prices[prices.length - 1];
-  const high   = Math.max(...prices), low = Math.min(...prices);
-  const chg    = (((last - first) / first) * 100).toFixed(2);
-  const chgCls = parseFloat(chg) >= 0 ? 'pos' : 'neg';
-
-  document.getElementById('modalStats').innerHTML = `
+  const points=histData.points,labels=points.map(p=>p.date),prices=points.map(p=>p.price);
+  const first=prices[0],last=prices[prices.length-1],high=Math.max(...prices),low=Math.min(...prices);
+  const chg=(((last-first)/first)*100).toFixed(2),chgCls=parseFloat(chg)>=0?'pos':'neg';
+  document.getElementById('modalStats').innerHTML=`
     <div class="modal-stat"><div class="modal-stat-label">Current</div><div class="modal-stat-val">£${last.toFixed(2)}</div></div>
     <div class="modal-stat"><div class="modal-stat-label">5Y Change</div><div class="modal-stat-val ${chgCls}">${parseFloat(chg)>=0?'+':''}${chg}%</div></div>
     <div class="modal-stat"><div class="modal-stat-label">5Y High / Low</div><div class="modal-stat-val" style="font-size:13px">£${high.toFixed(2)} <span style="color:var(--text-3)">/ £${low.toFixed(2)}</span></div></div>`;
 
-  const { peaks, troughs } = findPeaksAndTroughs(prices);
-  const ptRadii = new Array(prices.length).fill(0);
-  const ptColors = new Array(prices.length).fill('transparent');
-  peaks.forEach(i   => { ptRadii[i] = 7; ptColors[i] = '#C9A84C'; });
-  troughs.forEach(i => { ptRadii[i] = 7; ptColors[i] = '#CF5C5C'; });
+  const{peaks,troughs}=findPeaksAndTroughs(prices);
+  const ptRadii=new Array(prices.length).fill(0);
+  const ptColors=new Array(prices.length).fill('transparent');
+  peaks.forEach(i=>{ptRadii[i]=7;ptColors[i]='#C9A84C';});
+  troughs.forEach(i=>{ptRadii[i]=7;ptColors[i]='#CF5C5C';});
 
-  document.getElementById('chartLoadingState').style.display = 'none';
-  document.getElementById('chartWrap').style.display         = 'block';
+  document.getElementById('chartLoadingState').style.display='none';
+  document.getElementById('chartWrap').style.display='block';
 
-  stockChart = new Chart(document.getElementById('stockChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: ticker,
-        data: prices,
-        borderColor: '#C9A84C',
-        borderWidth: 2,
-        pointRadius:          ptRadii,
-        pointHoverRadius:     ptRadii.map(r => r ? r + 3 : 0),
-        pointBackgroundColor: ptColors,
-        pointBorderColor:     ptColors,
-        tension: 0.35,
-        fill: { target: 'origin', above: 'rgba(201,168,76,0.04)' },
-      }]
-    },
-    options: {
-      animation: { duration: 600 },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => `£${ctx.parsed.y.toFixed(2)}`,
-            title: ctx => {
-              const i = ctx[0].dataIndex;
-              const tag = peaks.includes(i) ? ' ◆ Peak' : troughs.includes(i) ? ' ◆ Trough' : '';
-              return ctx[0].label + tag;
-            }
-          },
-          bodyFont: { family: 'IBM Plex Mono', size: 12 },
-          titleFont: { family: 'IBM Plex Mono', size: 11 },
-          backgroundColor: '#0E1120',
-          borderColor: 'rgba(201,168,76,.3)',
-          borderWidth: 1,
-        }
+  stockChart=new Chart(document.getElementById('stockChart'),{
+    type:'line',
+    data:{labels,datasets:[{label:ticker,data:prices,borderColor:'#C9A84C',borderWidth:2,pointRadius:ptRadii,pointHoverRadius:ptRadii.map(r=>r?r+3:0),pointBackgroundColor:ptColors,pointBorderColor:ptColors,tension:0.35,fill:{target:'origin',above:'rgba(201,168,76,0.04)'}}]},
+    options:{
+      animation:{duration:600},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>'£'+ctx.parsed.y.toFixed(2),title:ctx=>{const i=ctx[0].dataIndex;return ctx[0].label+(peaks.includes(i)?' ◆ Peak':troughs.includes(i)?' ◆ Trough':'');}},bodyFont:{family:'IBM Plex Mono',size:12},titleFont:{family:'IBM Plex Mono',size:11},backgroundColor:'#0E1120',borderColor:'rgba(201,168,76,.3)',borderWidth:1}
       },
-      scales: {
-        x: { ticks: { color: '#4A4F62', font: { family: 'IBM Plex Mono', size: 9 }, maxTicksLimit: 12 }, grid: { color: 'rgba(255,255,255,.03)' } },
-        y: { ticks: { color: '#4A4F62', font: { family: 'IBM Plex Mono', size: 10 }, callback: v => '£' + v.toFixed(0) }, grid: { color: 'rgba(255,255,255,.03)' } }
+      scales:{
+        x:{ticks:{color:'#4A4F62',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:12},grid:{color:'rgba(255,255,255,.03)'}},
+        y:{ticks:{color:'#4A4F62',font:{family:'IBM Plex Mono',size:10},callback:v=>'£'+v.toFixed(0)},grid:{color:'rgba(255,255,255,.03)'}}
       },
-      onClick: async (event, elements) => {
-        if (!elements.length) return;
-        const i = elements[0].index;
-        const isPeak   = peaks.includes(i);
-        const isTrough = troughs.includes(i);
-        if (!isPeak && !isTrough) return;
-
-        const box = document.getElementById('explainBox');
+      onClick:async(event,elements)=>{
+        if(!elements.length)return;
+        const i=elements[0].index;
+        const isPeak=peaks.includes(i),isTrough=troughs.includes(i);
+        if(!isPeak&&!isTrough)return;
+        const box=document.getElementById('explainBox');
         box.classList.add('visible');
-        document.getElementById('explainLabel').textContent = isPeak ? '◆ Peak Analysis — AI' : '◆ Trough Analysis — AI';
-        document.getElementById('explainDate').textContent  = `${ticker} · ${labels[i]} · £${prices[i].toFixed(2)}`;
-        document.getElementById('explainText').innerHTML    = `<div class="explain-loader"><div class="spinner"></div>Claude is analysing this move…</div>`;
-
-        const explanation = await fetchExplanation(ticker, labels[i], prices[i], isPeak ? 'peak' : 'trough');
-        document.getElementById('explainText').textContent = explanation;
+        document.getElementById('explainLabel').textContent=isPeak?'◆ Peak Analysis — AI':'◆ Trough Analysis — AI';
+        document.getElementById('explainDate').textContent=`${ticker} · ${labels[i]} · £${prices[i].toFixed(2)}`;
+        document.getElementById('explainText').innerHTML=`<div class="explain-loader"><div class="spinner"></div> Claude is analysing this move…</div>`;
+        const explanation=await fetchExplanation(ticker,labels[i],prices[i],isPeak?'peak':'trough');
+        document.getElementById('explainText').textContent=explanation;
       },
-      onHover: (event, elements) => {
-        const canvas = event.chart.canvas;
-        if (elements.length) {
-          const i = elements[0].index;
-          canvas.style.cursor = (peaks.includes(i) || troughs.includes(i)) ? 'pointer' : 'default';
-        } else {
-          canvas.style.cursor = 'default';
-        }
+      onHover:(event,elements)=>{
+        const canvas=event.chart.canvas;
+        canvas.style.cursor=elements.length&&(peaks.includes(elements[0].index)||troughs.includes(elements[0].index))?'pointer':'default';
       }
     }
   });
 };
 
-window.closeModal = function () {
-  document.getElementById('stockModal').classList.remove('open');
-  document.body.style.overflow = '';
-};
+window.closeModal=function(){document.getElementById('stockModal').classList.remove('open');document.body.style.overflow='';};
+window.handleModalClick=function(e){if(e.target===document.getElementById('stockModal'))closeModal();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-window.handleModalClick = function (e) {
-  if (e.target === document.getElementById('stockModal')) closeModal();
-};
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// ═══════════════════════════════════════════
-//  MAIN DASHBOARD UPDATE
-// ═══════════════════════════════════════════
-async function updateDashboard() {
-  let totalValue = 0, totalCost = 0;
-  const prices = {};
-
-  for (const stock of portfolio) {
-    const price = await fetchPrice(stock.ticker);
-    prices[stock.ticker] = price;
-    stock.currentPrice   = price ?? stock.buyPrice;
-    if (price) totalValue += stock.shares * price;
-    totalCost += stock.shares * stock.buyPrice;
+// ═══════════════════════════════
+// DASHBOARD UPDATE
+// ═══════════════════════════════
+async function updateDashboard(){
+  let totalValue=0,totalCost=0;const prices={};
+  for(const stock of portfolio){
+    const price=await fetchPrice(stock.ticker);
+    prices[stock.ticker]=price;stock.currentPrice=price??stock.buyPrice;
+    if(price)totalValue+=stock.shares*price;
+    totalCost+=stock.shares*stock.buyPrice;
   }
-
-  const profit = totalValue - totalCost;
-
-  document.getElementById('portfolioValue').textContent = '£' + totalValue.toFixed(2);
-
-  const profEl = document.getElementById('portfolioProfit');
-  profEl.textContent = (profit >= 0 ? '+£' : '−£') + Math.abs(profit).toFixed(2);
-  profEl.className   = 'stat-val ' + (profit >= 0 ? 'pos' : 'neg');
-
-  updateAIScore(prices);
-  renderPortfolioTable(prices);
-  drawAllocationChart();
-  runMonteCarlo(totalValue);
-  checkAlerts(prices);
-
-  document.getElementById('lastUpdated').textContent =
-    'Updated ' + new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  const profit=totalValue-totalCost;
+  document.getElementById('portfolioValue').textContent='£'+totalValue.toFixed(2);
+  const profEl=document.getElementById('portfolioProfit');
+  profEl.textContent=(profit>=0?'+£':'−£')+Math.abs(profit).toFixed(2);
+  profEl.className='stat-val '+(profit>=0?'pos':'neg');
+  updateAIScore(prices);renderPortfolioTable(prices);drawAllocationChart();runMonteCarlo(totalValue);
+  checkAlerts(prices);await updateWatchlist();
+  document.getElementById('lastUpdated').textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
 
-// ═══════════════════════════════════════════
-//  INIT — intervals set once only
-// ═══════════════════════════════════════════
+// ═══════════════════════════════
+// INIT — intervals set once only
+// ═══════════════════════════════
 createHeatmap();
 loadHedgeFunds();
 loadNewsFeed();
 updateTickerBar();
 
-setInterval(updateDashboard, 15000);
-setInterval(updateTickerBar,  15000);
-setInterval(createHeatmap,    30000);
-setInterval(loadNewsFeed,     60000);
+setInterval(updateDashboard,15000);
+setInterval(updateTickerBar, 15000);
+setInterval(createHeatmap,   30000);
+setInterval(loadNewsFeed,    60000);
 </script>
-
 </body>
 </html>

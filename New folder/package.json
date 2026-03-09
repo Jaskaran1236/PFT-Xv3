@@ -1,0 +1,13 @@
+{
+  "name": "pft-x",
+  "version": "2.0.0",
+  "description": "Personal Financial Terminal — portfolio tracker with AI-powered market analysis",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}
